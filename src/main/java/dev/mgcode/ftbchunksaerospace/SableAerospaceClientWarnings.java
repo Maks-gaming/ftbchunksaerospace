@@ -48,15 +48,16 @@ final class SableAerospaceClientWarnings {
             return;
         }
 
-        final AirspaceInfo currentAirspace = findForeignAirspace(player, BlockPos.containing(player.position()));
+        final Vec3 currentWorldPos = Sable.HELPER.projectOutOfSubLevel(player.level(), player.position());
+        final AirspaceInfo currentAirspace = findForeignAirspace(player, BlockPos.containing(currentWorldPos));
         updateTrackedAirspace(player, currentAirspace);
 
-        final Vec3 velocity = Sable.HELPER.getVelocity(player.level(), subLevel, player.position());
+        final Vec3 velocity = getWorldVelocity(player, currentWorldPos);
         if (velocity.lengthSqr() < MIN_WARNING_SPEED_SQUARED) {
             return;
         }
 
-        final WarningPrediction prediction = findSecondsUntilClaim(player, velocity);
+        final WarningPrediction prediction = findSecondsUntilClaim(player, currentWorldPos, velocity);
         if (prediction == null) {
             return;
         }
@@ -84,9 +85,15 @@ final class SableAerospaceClientWarnings {
         return left == right || left != null && right != null && left.teamId().equals(right.teamId());
     }
 
-    private static WarningPrediction findSecondsUntilClaim(final LocalPlayer player, final Vec3 velocity) {
-        final Vec3 start = player.position();
-        if (findForeignAirspace(player, BlockPos.containing(start)) != null) {
+    private static Vec3 getWorldVelocity(final LocalPlayer player, final Vec3 currentWorldPos) {
+        final Vec3 previousLocalPos = new Vec3(player.xo, player.yo, player.zo);
+        final Vec3 previousWorldPos = Sable.HELPER.projectOutOfSubLevel(player.level(), previousLocalPos);
+        return currentWorldPos.subtract(previousWorldPos).scale(20.0);
+    }
+
+    private static WarningPrediction findSecondsUntilClaim(final LocalPlayer player, final Vec3 worldStart,
+            final Vec3 velocity) {
+        if (findForeignAirspace(player, BlockPos.containing(worldStart)) != null) {
             return null;
         }
 
@@ -99,7 +106,7 @@ final class SableAerospaceClientWarnings {
         BlockPos lastChecked = null;
 
         for (double seconds = WARNING_STEP_SECONDS; seconds <= warningLookaheadSeconds; seconds += WARNING_STEP_SECONDS) {
-            final Vec3 future = start.add(velocity.scale(seconds));
+            final Vec3 future = worldStart.add(velocity.scale(seconds));
             final BlockPos futurePos = BlockPos.containing(future);
             if (futurePos.equals(lastChecked)) {
                 continue;

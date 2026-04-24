@@ -1,0 +1,7 @@
+{
+  "message.ftbchunksaerospace.claim_denied": "Closed airspace %s. This Sable structure is inside claimed territory.",
+  "message.ftbchunksaerospace.airspace_warning": "Closed airspace %2$s ahead in %1$ss",
+  "message.ftbchunksaerospace.airspace_entered": "Entered closed airspace %s",
+  "message.ftbchunksaerospace.airspace_exited": "Left closed airspace %s",
+  "message.ftbchunksaerospace.airspace_owner_unknown": "unknown team"
+}

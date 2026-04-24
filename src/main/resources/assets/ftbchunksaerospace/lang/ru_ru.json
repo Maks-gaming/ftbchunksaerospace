@@ -1,0 +1,7 @@
+{
+  "message.ftbchunksaerospace.claim_denied": "Закрытое воздушное пространство %s. Эта конструкция Sable находится в чужом привате.",
+  "message.ftbchunksaerospace.airspace_warning": "Впереди закрытое воздушное пространство %2$s через %1$s с",
+  "message.ftbchunksaerospace.airspace_entered": "Вы вошли в закрытое воздушное пространство %s",
+  "message.ftbchunksaerospace.airspace_exited": "Вы покинули закрытое воздушное пространство %s",
+  "message.ftbchunksaerospace.airspace_owner_unknown": "неизвестной команды"
+}

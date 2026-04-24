@@ -1,0 +1,64 @@
+### Gradle
+.gradle
+build/
+!gradle/wrapper/gradle-wrapper.jar
+!**/src/**/build/
+
+### IntelliJ IDEA
+.idea/
+*.iws
+*.iml
+*.ipr
+out/
+!**/src/**/out/
+
+.run/
+
+### Eclipse
+.apt_generated
+.classpath
+.eclipse/
+.factorypath
+.project
+.settings
+.springBeans
+.sts4-cache
+bin/
+!**/src/**/bin/
+
+### VS Code
+.vscode/*
+!.vscode/launch.json
+!.vscode/settings.json
+!.vscode/tasks.json
+
+### Mac OS
+.DS_Store
+
+### Minecraft Modding
+run/
+run2/
+run-data/
+run-gametest/
+run-server/
+!**/src/**/run/
+**/src/generated/**/.cache/
+bin/
+config/
+crash-reports/
+defaultconfigs/
+debug/
+downloads/
+local/
+logs/
+mods/
+resourcepacks/
+saved-hotbars/
+saves/
+imgui.ini
+options.txt
+servers.dat
+usercache.json
+usernamecache.json
+repo/
+!**/src/**/repo/

@@ -1,5 +1,9 @@
 {
-  "message.ftbchunksaerospace.claim_denied": "Закрытое воздушное пространство %s. Эта конструкция Sable находится в чужом привате.",
+  "message.ftbchunksaerospace.claim_denied": "Занятая территория %s. Эта конструкция Sable находится в чужом привате.",
+  "message.ftbchunksaerospace.free_zone_break_denied": "Свободная зона над занятой территорией %s: ломать блоки здесь нельзя.",
+  "message.ftbchunksaerospace.free_zone_place_denied": "Свободная зона над занятой территорией %s: ставить блоки здесь нельзя.",
+  "message.ftbchunksaerospace.free_zone_ignite_denied": "Свободная зона над занятой территорией %s: поджигать TNT здесь нельзя.",
+  "message.ftbchunksaerospace.free_zone_use_denied": "Свободная зона над занятой территорией %s: использование блоков здесь запрещено.",
   "message.ftbchunksaerospace.airspace_warning": "Впереди закрытое воздушное пространство %2$s через %1$s с",
   "message.ftbchunksaerospace.airspace_entered": "Вы вошли в закрытое воздушное пространство %s",
   "message.ftbchunksaerospace.airspace_exited": "Вы покинули закрытое воздушное пространство %s",

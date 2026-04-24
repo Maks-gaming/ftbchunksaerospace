@@ -1,5 +1,9 @@
 {
-  "message.ftbchunksaerospace.claim_denied": "Closed airspace %s. This Sable structure is inside claimed territory.",
+  "message.ftbchunksaerospace.claim_denied": "Claimed territory of %s. This Sable structure is inside protected land.",
+  "message.ftbchunksaerospace.free_zone_break_denied": "Free zone above %s's claimed territory: breaking blocks is disabled here.",
+  "message.ftbchunksaerospace.free_zone_place_denied": "Free zone above %s's claimed territory: placing blocks is disabled here.",
+  "message.ftbchunksaerospace.free_zone_ignite_denied": "Free zone above %s's claimed territory: TNT ignition is disabled here.",
+  "message.ftbchunksaerospace.free_zone_use_denied": "Free zone above %s's claimed territory: block use is disabled here.",
   "message.ftbchunksaerospace.airspace_warning": "Closed airspace %2$s ahead in %1$ss",
   "message.ftbchunksaerospace.airspace_entered": "Entered closed airspace %s",
   "message.ftbchunksaerospace.airspace_exited": "Left closed airspace %s",

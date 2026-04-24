@@ -22,25 +22,80 @@ final class FtbChunksSableAerospaceConfig {
     }
 
     static boolean isFreeZone(final int worldY) {
-        return worldY > COMMON.freeZoneAboveY();
+        return COMMON.freeZoneEnabled() && worldY > COMMON.freeZoneAboveY();
     }
 
     static final class Common {
+        private final ModConfigSpec.BooleanValue freeZoneEnabled;
         private final ModConfigSpec.IntValue freeZoneAboveY;
+        private final ModConfigSpec.BooleanValue freeZoneAllowBlockUse;
+        private final ModConfigSpec.BooleanValue freeZoneAllowBlockBreak;
+        private final ModConfigSpec.BooleanValue freeZoneAllowBlockPlace;
+        private final ModConfigSpec.BooleanValue freeZoneDenyTntIgnition;
+        private final ModConfigSpec.BooleanValue freeZoneShowDenyMessage;
 
         private Common(final ModConfigSpec.Builder builder) {
-            builder.comment("Shared protection settings.").push("protection");
+            builder.comment("Shared protection settings.").push("freeZone");
+
+            freeZoneEnabled = builder
+                    .comment(
+                            "Enable a special free-zone ruleset above the configured Y level inside foreign claimed chunks.")
+                    .define("enabled", true);
 
             freeZoneAboveY = builder
                     .comment(
-                            "Claims become a free zone above this Y level. Interactions and warnings are ignored when Y is greater than this value.")
+                            "Foreign claimed chunks switch to free-zone rules when Y is greater than this value.")
                     .defineInRange("freeZoneAboveY", 320, -2048, 4096);
+
+            freeZoneAllowBlockUse = builder
+                    .comment("Allow normal block/item use in the free zone. Default: true.")
+                    .define("allowBlockUse", true);
+
+            freeZoneAllowBlockBreak = builder
+                    .comment("Allow breaking blocks in the free zone. Default: false.")
+                    .define("allowBlockBreak", false);
+
+            freeZoneAllowBlockPlace = builder
+                    .comment("Allow placing blocks and fluids in the free zone. Default: false.")
+                    .define("allowBlockPlace", false);
+
+            freeZoneDenyTntIgnition = builder
+                    .comment("Deny TNT ignition in the free zone even when normal use is allowed. Default: true.")
+                    .define("denyTntIgnition", true);
+
+            freeZoneShowDenyMessage = builder
+                    .comment("Show a message when an action is blocked by free-zone rules. Default: true.")
+                    .define("showDenyMessage", true);
 
             builder.pop();
         }
 
+        boolean freeZoneEnabled() {
+            return freeZoneEnabled.get();
+        }
+
         int freeZoneAboveY() {
             return freeZoneAboveY.get();
+        }
+
+        boolean freeZoneAllowBlockUse() {
+            return freeZoneAllowBlockUse.get();
+        }
+
+        boolean freeZoneAllowBlockBreak() {
+            return freeZoneAllowBlockBreak.get();
+        }
+
+        boolean freeZoneAllowBlockPlace() {
+            return freeZoneAllowBlockPlace.get();
+        }
+
+        boolean freeZoneDenyTntIgnition() {
+            return freeZoneDenyTntIgnition.get();
+        }
+
+        boolean freeZoneShowDenyMessage() {
+            return freeZoneShowDenyMessage.get();
         }
     }
 

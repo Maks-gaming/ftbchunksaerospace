@@ -3,16 +3,45 @@ package dev.mgcode.ftbchunksaerospace;
 import net.neoforged.neoforge.common.ModConfigSpec;
 
 final class FtbChunksSableAerospaceConfig {
+    static final ModConfigSpec COMMON_SPEC;
+    static final Common COMMON;
     static final ModConfigSpec CLIENT_SPEC;
     static final Client CLIENT;
 
     static {
+        final ModConfigSpec.Builder commonBuilder = new ModConfigSpec.Builder();
+        COMMON = new Common(commonBuilder);
+        COMMON_SPEC = commonBuilder.build();
+
         final ModConfigSpec.Builder builder = new ModConfigSpec.Builder();
         CLIENT = new Client(builder);
         CLIENT_SPEC = builder.build();
     }
 
     private FtbChunksSableAerospaceConfig() {
+    }
+
+    static boolean isFreeZone(final int worldY) {
+        return worldY > COMMON.freeZoneAboveY();
+    }
+
+    static final class Common {
+        private final ModConfigSpec.IntValue freeZoneAboveY;
+
+        private Common(final ModConfigSpec.Builder builder) {
+            builder.comment("Shared protection settings.").push("protection");
+
+            freeZoneAboveY = builder
+                    .comment(
+                            "Claims become a free zone above this Y level. Interactions and warnings are ignored when Y is greater than this value.")
+                    .defineInRange("freeZoneAboveY", 320, -2048, 4096);
+
+            builder.pop();
+        }
+
+        int freeZoneAboveY() {
+            return freeZoneAboveY.get();
+        }
     }
 
     static final class Client {

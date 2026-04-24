@@ -123,6 +123,10 @@ final class SableAerospaceClientWarnings {
     }
 
     private static AirspaceInfo findForeignAirspace(final LocalPlayer player, final BlockPos worldPos) {
+        if (FtbChunksSableAerospaceConfig.isFreeZone(worldPos.getY())) {
+            return null;
+        }
+
         final MapManager mapManager = MapManager.getInstance().orElse(null);
         if (mapManager == null) {
             return null;

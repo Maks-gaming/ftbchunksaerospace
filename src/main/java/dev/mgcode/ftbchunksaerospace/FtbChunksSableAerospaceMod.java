@@ -14,6 +14,7 @@ public final class FtbChunksSableAerospaceMod {
     public static final Logger LOGGER = LogUtils.getLogger();
 
     public FtbChunksSableAerospaceMod(final ModContainer modContainer) {
+        modContainer.registerConfig(ModConfig.Type.COMMON, FtbChunksSableAerospaceConfig.COMMON_SPEC);
         modContainer.registerConfig(ModConfig.Type.CLIENT, FtbChunksSableAerospaceConfig.CLIENT_SPEC);
 
         NeoForge.EVENT_BUS.register(new SableFtbChunksCompat());

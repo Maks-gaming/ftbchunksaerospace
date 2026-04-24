@@ -88,6 +88,10 @@ final class SableFtbChunksCompat {
             final InteractionHand hand,
             final BlockPos worldPos,
             final Protection protection) {
+        if (FtbChunksSableAerospaceConfig.isFreeZone(worldPos.getY())) {
+            return false;
+        }
+
         return FTBChunksAPI.api().isManagerLoaded()
                 && FTBChunksAPI.api().getManager().shouldPreventInteraction(entity, hand, worldPos, protection, null);
     }

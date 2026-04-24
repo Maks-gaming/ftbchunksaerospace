@@ -1,0 +1,131 @@
+name: Release
+
+on:
+  release:
+    types:
+      - published
+  workflow_dispatch:
+    inputs:
+      tag_name:
+        description: Git tag to release, for example v1.0.0
+        required: true
+        type: string
+      release_name:
+        description: Optional release title
+        required: false
+        type: string
+      prerelease:
+        description: Mark the release as prerelease when creating it from workflow_dispatch
+        required: false
+        default: false
+        type: boolean
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Set up Java 21
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: "21"
+
+      - name: Set up Gradle caching
+        uses: gradle/actions/setup-gradle@v4
+
+      - name: Make Gradle wrapper executable
+        run: chmod +x ./gradlew
+
+      - name: Build mod
+        run: ./gradlew build
+
+      - name: Resolve release metadata
+        id: metadata
+        shell: bash
+        run: |
+          if [[ "${{ github.event_name }}" == "release" ]]; then
+            echo "tag=${{ github.event.release.tag_name }}" >> "$GITHUB_OUTPUT"
+            echo "name=${{ github.event.release.name }}" >> "$GITHUB_OUTPUT"
+            echo "prerelease=${{ github.event.release.prerelease }}" >> "$GITHUB_OUTPUT"
+          else
+            echo "tag=${{ inputs.tag_name }}" >> "$GITHUB_OUTPUT"
+            echo "name=${{ inputs.release_name }}" >> "$GITHUB_OUTPUT"
+            echo "prerelease=${{ inputs.prerelease }}" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Create release when started manually
+        if: github.event_name == 'workflow_dispatch'
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          TAG_NAME: ${{ steps.metadata.outputs.tag }}
+          RELEASE_NAME: ${{ steps.metadata.outputs.name }}
+          PRERELEASE: ${{ steps.metadata.outputs.prerelease }}
+        shell: bash
+        run: |
+          if gh release view "$TAG_NAME" > /dev/null 2>&1; then
+            exit 0
+          fi
+
+          title="$RELEASE_NAME"
+          if [[ -z "$title" ]]; then
+            title="$TAG_NAME"
+          fi
+
+          args=("$TAG_NAME" "--title" "$title" "--generate-notes")
+          if [[ "$PRERELEASE" == "true" ]]; then
+            args+=("--prerelease")
+          fi
+
+          gh release create "${args[@]}"
+
+      - name: Collect release jars
+        id: jars
+        shell: bash
+        run: |
+          shopt -s nullglob
+          jars=()
+          for jar in build/libs/*.jar; do
+            case "$jar" in
+              *-sources.jar|*-javadoc.jar)
+                continue
+                ;;
+            esac
+            jars+=("$jar")
+          done
+
+          if [[ ${#jars[@]} -eq 0 ]]; then
+            echo "No release jars found in build/libs" >&2
+            exit 1
+          fi
+
+          printf 'files<<EOF\n' >> "$GITHUB_OUTPUT"
+          printf '%s\n' "${jars[@]}" >> "$GITHUB_OUTPUT"
+          printf 'EOF\n' >> "$GITHUB_OUTPUT"
+
+      - name: Upload release assets
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          TAG_NAME: ${{ steps.metadata.outputs.tag }}
+          RELEASE_FILES: ${{ steps.jars.outputs.files }}
+        shell: bash
+        run: |
+          mapfile -t jars <<< "$RELEASE_FILES"
+          gh release upload "$TAG_NAME" "${jars[@]}" --clobber
+
+      - name: Upload workflow artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: ftbchunksaerospace-release-${{ steps.metadata.outputs.tag }}
+          path: |
+            build/libs/*.jar
+            !build/libs/*-sources.jar
+            !build/libs/*-javadoc.jar
+          if-no-files-found: error
+          retention-days: 30

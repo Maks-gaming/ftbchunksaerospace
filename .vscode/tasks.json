@@ -4,15 +4,18 @@
     {
       "label": "prepareClientRun",
       "type": "process",
-      "command": "${workspaceFolder}\\gradlew.bat",
-      "args": [
-        "prepareVsCodeClientRuns"
-      ],
+      "command": "${workspaceFolder}/.vscode/prepareClientRun.sh",
+      "windows": {
+        "command": "${workspaceFolder}\\.vscode\\prepareClientRun.bat"
+      },
+      "linux": {
+        "command": "${workspaceFolder}/.vscode/prepareClientRun.sh"
+      },
+      "osx": {
+        "command": "${workspaceFolder}/.vscode/prepareClientRun.sh"
+      },
       "options": {
-        "cwd": "${workspaceFolder}",
-        "env": {
-          "JAVA_HOME": "C:\\Users\\mgcode\\.jdk\\jdk-21.0.8"
-        }
+        "cwd": "${workspaceFolder}"
       },
       "problemMatcher": []
     }
